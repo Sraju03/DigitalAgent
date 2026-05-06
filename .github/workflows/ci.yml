@@ -38,7 +38,7 @@ jobs:
           fi
           echo "status=success" >> $GITHUB_OUTPUT
 
-      - name: Lint
+      - name: Lint Check
         id: lint
         run: |
           if npm run lint; then
@@ -48,7 +48,7 @@ jobs:
             exit 1
           fi
 
-      - name: Build
+      - name: Build Check
         id: build
         run: |
           if npm run build; then
@@ -57,6 +57,7 @@ jobs:
             echo "status=failed" >> $GITHUB_OUTPUT
             exit 1
           fi
+          
   pr-comment:
     if: always() && github.event_name == 'pull_request'
     needs: validate
@@ -68,12 +69,7 @@ jobs:
         with:
           script: |
             const status = "${{ needs.validate.result }}";
-            
-            function pretty(status) {
-              if (!status) return "Unknown";
-              return status === "success" ? "Success" : "Failed";
-            }
-            
+                        
             const branch = "${{ needs.validate.outputs.branch_status }}";
             const lint = "${{ needs.validate.outputs.lint_status }}";
             const build = "${{ needs.validate.outputs.build_status }}";
@@ -81,7 +77,7 @@ jobs:
             const recommendations = [];
             
             if (branch === "failed") {
-              recommendations.push("🔹 Branch name must follow: feat/*, fix/*, hotfix/*, ref/*");
+              recommendations.push("🔹 Branch name must follow: `feat/*`, `fix/*`, `hotfix/*`, `ref/*`");
             }
             
             if (lint === "failed") {
@@ -97,7 +93,7 @@ jobs:
             }
             
             const body = [
-              `## 🚀 PR Validation Report - ${status === "success" ? "✅" : "❌"} ${pretty(status)}`,
+              `## 🚀 PR Validation Report - ${status === "success" ? "✅ Success" : "❌ Failed"}`,
               "",
               `🌿 Branch Naming: ${branch === 'success' ? "✅ Success" : "❌ Failed"}`,
               `🧹 Lint: ${lint === 'success' ? "✅ Success" : "❌ Failed"}`,
@@ -111,3 +107,29 @@ jobs:
               "",
               "⚠️ Auto-generated report. Do not edit."
             ].join("\n");
+            
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const existing = comments.find(c =>
+              c.body.includes("PR Validation Report")
+            );
+            
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            }
