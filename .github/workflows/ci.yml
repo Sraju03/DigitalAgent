@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate branch name
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "Branch: ${{ github.head_ref }}"
+          if [[ ! "${{ github.head_ref }}" =~ ^(feat|fix|hotfix|ref)/ ]]; then
+            echo "❌ Invalid branch name. Use feat/*, fix/*, hotfix/*, ref/*"
+            exit 1
+          fi
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Build project
+        run: npm run build
