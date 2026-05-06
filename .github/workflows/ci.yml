@@ -68,12 +68,16 @@ jobs:
         with:
           script: |
             const status = "${{ needs.validate.result }}";
-            const statusEmoji = status === "success" ? "✅" : "❌";
-                  
+            
+            function pretty(status) {
+              if (!status) return "Unknown";
+              return status === "success" ? "Success" : "Failed";
+            }
+            
             const branch = "${{ needs.validate.outputs.branch_status }}";
             const lint = "${{ needs.validate.outputs.lint_status }}";
             const build = "${{ needs.validate.outputs.build_status }}";
-    
+            
             const recommendations = [];
             
             if (branch === "failed") {
@@ -93,11 +97,11 @@ jobs:
             }
             
             const body = [
-              `## 🚀 PR Validation Report - ${statusEmoji} ${status.toProper()}`,
+              `## 🚀 PR Validation Report - ${status === "success" ? "✅" : "❌"} ${pretty(status)}`,
               "",
-              `🌿 Branch Naming: ${branch === 'success' ? "✅" : "❌"} ${branch.toProper()}`,
-              `🧹 Lint: ${lint === 'success' ? "✅" : "❌"}  ${lint.toProper()}`,
-              `🏗️ Build: ${build === 'success' ? "✅" : "❌"}  ${build.toProper()}`,
+              `🌿 Branch Naming: ${branch === 'success' ? "✅ Success" : "❌ Failed"}`,
+              `🧹 Lint: ${lint === 'success' ? "✅ Success" : "❌ Failed"}`,
+              `🏗️ Build: ${build === 'success' ? "✅ Success" : "❌ Failed"}`,
               "",
               "## 💡 Recommendations",
               "",
@@ -107,20 +111,3 @@ jobs:
               "",
               "⚠️ Auto-generated report. Do not edit."
             ].join("\n");
-      
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-      
-            const existing = comments.find(c => c.body.includes("PR Validation Report"));
-      
-            
-            await github.rest.issues.createComment({
-               owner: context.repo.owner,
-               repo: context.repo.repo,
-               issue_number: context.issue.number,
-               body
-             });
-            
