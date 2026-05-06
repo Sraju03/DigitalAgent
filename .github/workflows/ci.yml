@@ -38,7 +38,7 @@ jobs:
         run: npm run build
 
   pr-comment:
-    if: github.event_name == 'pull_request'
+    if: always() && github.event_name == 'pull_request'
     needs: validate
     runs-on: ubuntu-latest
 
