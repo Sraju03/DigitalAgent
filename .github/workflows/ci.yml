@@ -1,4 +1,4 @@
-name: CI + PR Report
+name: CI + PR Actions
 
 on:
   pull_request:
@@ -148,6 +148,9 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const issue_number = pr.number;
+            
+            const reviewer = ["Sraju03"];
+            
 
             await github.rest.issues.addAssignees({
               owner,
@@ -155,10 +158,15 @@ jobs:
               issue_number,
               assignees: [pr.user.login]
             });
-
-            await github.rest.pulls.requestReviewers({
-              owner,
-              repo,
-              pull_number: issue_number,
-              reviewers: ["Sraju03"]
-            });
+            
+    
+            if (pr.user.login.toLowerCase() !== reviewer.toLowerCase()) {
+              await github.rest.pulls.requestReviewers({
+                owner,
+                repo,
+                pull_number: issue_number,
+                reviewers: reviewer
+              });
+            } else {
+              console.log("Skipping review request: PR author is the reviewer");
+            }
