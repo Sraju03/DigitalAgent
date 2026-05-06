@@ -11,9 +11,6 @@ jobs:
   validate:
     runs-on: ubuntu-latest
 
-    outputs:
-      status: ${{ job.status }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,7 +23,6 @@ jobs:
       - name: Install
         run: npm ci
 
-      # 🔒 Branch name validation
       - name: Validate branch name
         if: github.event_name == 'pull_request'
         run: |
@@ -52,32 +48,28 @@ jobs:
         with:
           script: |
             const status = "${{ needs.validate.result }}";
-
             const statusEmoji = status === "success" ? "✅" : "❌";
-
-            const body = `
-## 🚀 PR Validation Report
-
-🌿 Branch Naming: ${statusEmoji}  
-🧹 Lint: ${statusEmoji}  
-🧪 Tests: ${statusEmoji}  
-🏗️ Build: ${statusEmoji}  
-
----
-
-🔁 Overall Status: ${statusEmoji}
-
-⚠️ Auto-generated report. Do not edit.
-`;
-
+      
+            const body = [
+              "## 🚀 PR Validation Report",
+              "",
+              `🌿 Branch Naming: ${statusEmoji}`,
+              `🧹 Lint: ${statusEmoji}`,
+              `🏗️ Build: ${statusEmoji}`,
+              "",
+              "---",
+              "",
+              "⚠️ Auto-generated report. Do not edit."
+            ].join("\n");
+      
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
             });
-
+      
             const existing = comments.find(c => c.body.includes("PR Validation Report"));
-
+      
             if (existing) {
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,
