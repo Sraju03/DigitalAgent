@@ -14,17 +14,18 @@ jobs:
         with:
           script: |
             const body = `
-## ✅ PR Checklist (Auto)
+## ✅ PR Validation Report
 
-- [ ] Linked issue (Closes #...)
-- [ ] Branch name follows convention (feat/*, fix/*, etc.)
-- [ ] Code builds successfully
-- [ ] Lint passes
-- [ ] Tests added/updated
-- [ ] No console logs / debug code
-- [ ] Documentation updated (if needed)
+🔗 Issue Linked: ❌ / ✅  
+🌿 Branch Naming: ❌ / ✅  
+🧹 Lint Status: ❌ / ✅  
+🧪 Tests: ❌ / ✅  
+🏗️ Build: ❌ / ✅  
+📝 Documentation: ❌ / ✅  
 
-> ⚠️ This checklist is auto-generated. Do not edit manually.
+---
+
+⚠️ This report is auto-generated. Do not edit manually.
 `;
 
             const { data: comments } = await github.rest.issues.listComments({
@@ -33,7 +34,7 @@ jobs:
               issue_number: context.issue.number,
             });
 
-            const existing = comments.find(c => c.body.includes("PR Checklist (Auto)"));
+            const existing = comments.find(c => c.body.includes("PR Validation Report"));
 
             if (existing) {
               await github.rest.issues.updateComment({
