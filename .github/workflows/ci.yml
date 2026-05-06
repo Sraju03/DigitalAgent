@@ -55,7 +55,22 @@ jobs:
           else
             echo "status=failed" >> $GITHUB_OUTPUT
           fi
-
+          
+      - name: Final validation gate
+        run: |
+          echo "Branch: ${{ steps.branch.outputs.status }}"
+          echo "Lint: ${{ steps.lint.outputs.status }}"
+          echo "Build: ${{ steps.build.outputs.status }}"
+      
+          if [[ "${{ steps.branch.outputs.status }}" == "failed" ]] || \
+            [[ "${{ steps.lint.outputs.status }}" == "failed" ]] || \
+            [[ "${{ steps.build.outputs.status }}" == "failed" ]]; 
+          then
+              echo "❌ Validation failed"
+              exit 1
+          fi
+      
+                echo "✅ All checks passed"
   pr-comment:
     if: always() && github.event_name == 'pull_request'
     needs: validate
