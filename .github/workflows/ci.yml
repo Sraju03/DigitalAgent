@@ -14,32 +14,48 @@ jobs:
   validate:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    outputs:
+      branch_status: ${{ steps.branch.outputs.status }}
+      lint_status: ${{ steps.lint.outputs.status }}
+      build_status: ${{ steps.build.outputs.status }}
 
-      - name: Use Node
-        uses: actions/setup-node@v4
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install
-        run: npm ci
+      - run: npm ci
 
       - name: Validate branch name
-        if: github.event_name == 'pull_request'
+        id: branch
         run: |
           if [[ ! "${{ github.head_ref }}" =~ ^(feat|fix|hotfix|ref)/ ]]; then
-            echo "Invalid branch name"
+            echo "status=❌" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          echo "status=✅" >> $GITHUB_OUTPUT
+
+      - name: Lint
+        id: lint
+        run: |
+          if npm run lint; then
+            echo "status=✅" >> $GITHUB_OUTPUT
+          else
+            echo "status=❌" >> $GITHUB_OUTPUT
             exit 1
           fi
 
-      - name: Lint
-        run: npm run lint
-
       - name: Build
-        run: npm run build
-
+        id: build
+        run: |
+          if npm run build; then
+            echo "status=✅" >> $GITHUB_OUTPUT
+          else
+            echo "status=❌" >> $GITHUB_OUTPUT
+            exit 1
+          fi
   pr-comment:
     if: always() && github.event_name == 'pull_request'
     needs: validate
@@ -56,9 +72,9 @@ jobs:
             const body = [
               "## 🚀 PR Validation Report",
               "",
-              `🌿 Branch Naming: ${statusEmoji}`,
-              `🧹 Lint: ${statusEmoji}`,
-              `🏗️ Build: ${statusEmoji}`,
+              `🌿 Branch Naming: ${"${{ needs.validate.outputs.branch_status }}"} `,
+              `🧹 Lint: ${"${{ needs.validate.outputs.lint_status }}"} `,
+              `🏗️ Build: ${"${{ needs.validate.outputs.build_status }}"} `,
               "",
               "---",
               "",
