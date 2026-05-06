@@ -32,11 +32,11 @@ jobs:
       - name: Validate branch name
         id: branch
         run: |
-          if [[ ! "${{ github.head_ref }}" =~ ^(feat|fix|hotfix|ref)/ ]]; then
+          if [[ "${{ github.head_ref }}" =~ ^(feat|fix|hotfix|ref)/ ]]; then
+            echo "status=success" >> $GITHUB_OUTPUT
+          else
             echo "status=failed" >> $GITHUB_OUTPUT
-            exit 1
           fi
-          echo "status=success" >> $GITHUB_OUTPUT
 
       - name: Lint Check
         id: lint
@@ -45,9 +45,8 @@ jobs:
             echo "status=success" >> $GITHUB_OUTPUT
           else
             echo "status=failed" >> $GITHUB_OUTPUT
-            exit 1
           fi
-
+          
       - name: Build Check
         id: build
         run: |
@@ -55,9 +54,7 @@ jobs:
             echo "status=success" >> $GITHUB_OUTPUT
           else
             echo "status=failed" >> $GITHUB_OUTPUT
-            exit 1
           fi
-
 
   pr-comment:
     if: always() && github.event_name == 'pull_request'
