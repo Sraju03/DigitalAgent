@@ -1,39 +1,95 @@
-name: CI
+name: CI + PR Report
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
   push:
-    branches: [master]
-    
+    branches: [main]
   workflow_dispatch:
 
 jobs:
   validate:
     runs-on: ubuntu-latest
 
+    outputs:
+      status: ${{ job.status }}
+
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node.js
+      - name: Use Node
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install dependencies
+      - name: Install
         run: npm ci
 
+      # 🔒 Branch name validation
       - name: Validate branch name
         if: github.event_name == 'pull_request'
         run: |
-          echo "Branch: ${{ github.head_ref }}"
           if [[ ! "${{ github.head_ref }}" =~ ^(feat|fix|hotfix|ref)/ ]]; then
-            echo "❌ Invalid branch name. Use feat/*, fix/*, hotfix/*, ref/*"
+            echo "Invalid branch name"
             exit 1
           fi
 
-      - name: Run lint
+      - name: Lint
         run: npm run lint
 
-      - name: Build project
+      - name: Build
         run: npm run build
+
+  pr-comment:
+    if: github.event_name == 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Add / Update PR comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const status = "${{ needs.validate.result }}";
+
+            const statusEmoji = status === "success" ? "✅" : "❌";
+
+            const body = `
+## 🚀 PR Validation Report
+
+🌿 Branch Naming: ${statusEmoji}  
+🧹 Lint: ${statusEmoji}  
+🧪 Tests: ${statusEmoji}  
+🏗️ Build: ${statusEmoji}  
+
+---
+
+🔁 Overall Status: ${statusEmoji}
+
+⚠️ Auto-generated report. Do not edit.
+`;
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existing = comments.find(c => c.body.includes("PR Validation Report"));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            }
