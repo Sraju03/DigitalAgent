@@ -93,7 +93,7 @@ jobs:
             }
             
             const body = [
-              `## 🚀 PR Validation Report - ${statusEmoji} ${success.toProper()}`,
+              `## 🚀 PR Validation Report - ${statusEmoji} ${status.toProper()}`,
               "",
               `🌿 Branch Naming: ${branch === 'success' ? "✅" : "❌"} ${branch.toProper()}`,
               `🧹 Lint: ${lint === 'success' ? "✅" : "❌"}  ${lint.toProper()}`,
