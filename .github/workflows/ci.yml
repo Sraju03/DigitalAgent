@@ -3,6 +3,7 @@ name: CI + PR Report
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+    
   workflow_dispatch:
 
 permissions:
@@ -32,18 +33,18 @@ jobs:
         id: branch
         run: |
           if [[ ! "${{ github.head_ref }}" =~ ^(feat|fix|hotfix|ref)/ ]]; then
-            echo "status=❌" >> $GITHUB_OUTPUT
+            echo "status=failed" >> $GITHUB_OUTPUT
             exit 1
           fi
-          echo "status=✅" >> $GITHUB_OUTPUT
+          echo "status=success" >> $GITHUB_OUTPUT
 
       - name: Lint
         id: lint
         run: |
           if npm run lint; then
-            echo "status=✅" >> $GITHUB_OUTPUT
+            echo "status=success" >> $GITHUB_OUTPUT
           else
-            echo "status=❌" >> $GITHUB_OUTPUT
+            echo "status=failed" >> $GITHUB_OUTPUT
             exit 1
           fi
 
@@ -51,9 +52,9 @@ jobs:
         id: build
         run: |
           if npm run build; then
-            echo "status=✅" >> $GITHUB_OUTPUT
+            echo "status=success" >> $GITHUB_OUTPUT
           else
-            echo "status=❌" >> $GITHUB_OUTPUT
+            echo "status=failed" >> $GITHUB_OUTPUT
             exit 1
           fi
   pr-comment:
@@ -68,13 +69,39 @@ jobs:
           script: |
             const status = "${{ needs.validate.result }}";
             const statusEmoji = status === "success" ? "✅" : "❌";
-      
+                  
+            const branch = "${{ needs.validate.outputs.branch_status }}";
+            const lint = "${{ needs.validate.outputs.lint_status }}";
+            const build = "${{ needs.validate.outputs.build_status }}";
+    
+            const recommendations = [];
+            
+            if (branch === "failed") {
+              recommendations.push("🔹 Branch name must follow: feat/*, fix/*, hotfix/*, ref/*");
+            }
+            
+            if (lint === "failed") {
+              recommendations.push("🔹 Fix ESLint errors: run `npm run lint` locally before pushing");
+            }
+            
+            if (build === "failed") {
+              recommendations.push("🔹 Build failed: check TypeScript errors or missing dependencies");
+            }
+            
+            if (recommendations.length === 0) {
+              recommendations.push("🎉 Everything looks good! Ready to merge.");
+            }
+            
             const body = [
-              "## 🚀 PR Validation Report",
+              `## 🚀 PR Validation Report - ${statusEmoji} ${success.toProper()}`,
               "",
-              `🌿 Branch Naming: ${"${{ needs.validate.outputs.branch_status }}"} `,
-              `🧹 Lint: ${"${{ needs.validate.outputs.lint_status }}"} `,
-              `🏗️ Build: ${"${{ needs.validate.outputs.build_status }}"} `,
+              `🌿 Branch Naming: ${branch === 'success' ? "✅" : "❌"} ${branch.toProper()}`,
+              `🧹 Lint: ${lint === 'success' ? "✅" : "❌"}  ${lint.toProper()}`,
+              `🏗️ Build: ${build === 'success' ? "✅" : "❌"}  ${build.toProper()}`,
+              "",
+              "## 💡 Recommendations",
+              "",
+              ...recommendations,
               "",
               "---",
               "",
@@ -89,18 +116,11 @@ jobs:
       
             const existing = comments.find(c => c.body.includes("PR Validation Report"));
       
-            if (existing) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: existing.id,
-                body
-              });
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body
-              });
-            }
+            
+            await github.rest.issues.createComment({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               issue_number: context.issue.number,
+               body
+             });
+            
