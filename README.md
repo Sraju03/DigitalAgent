@@ -1,75 +1,120 @@
-# React + TypeScript + Vite
+# Digital Agent AI
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend application built using **React**, **TypeScript**, and **Vite**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+# Runtime Environment
 
-## React Compiler
+**Node.js - 22.12.0** - Development runtime
+**npm - 11.4.2** - Package management and script execution
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+---
 
-Note: This will impact Vite dev & build performances.
+# Tech Stack
 
-## Expanding the ESLint configuration
+**React - 19** - Component-based UI development.
+**TypeScript - 6** - Static typing and improved developer experience.
+**Vite - 8** - Fast development server and build tool.
+**ESLint - 9** - Code quality and linting.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+# Project Dependencies
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Production Dependencies
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```json
+"dependencies": {
+  "@eslint/js": "9.39.4",
+  "react": "19.2.5",
+  "react-dom": "19.2.5",
+  "react-router-dom": "7.14.1"
+}
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Dependency Usage
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+`react` - Builds the user interface using reusable components
+`react-dom` - Renders React components into the browser DOM
+`react-router-dom` - Handles routing and page navigation
+`@eslint/js` - Provides ESLint JavaScript configurations
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Development Dependencies
+
+```json
+"devDependencies": {
+  "@types/node": "24.12.2",
+  "@types/react": "19.2.14",
+  "@types/react-dom": "19.2.3",
+  "@typescript-eslint/eslint-plugin": "8.58.2",
+  "@typescript-eslint/parser": "8.58.2",
+  "@eslint/js": "9.39.4",
+  "eslint": "9.39.4",
+  "eslint-plugin-react-hooks": "7.1.1",
+  "eslint-plugin-react-refresh": "0.5.2",
+  "@vitejs/plugin-react": "6.0.1",
+  "globals": "17.5.0",
+  "typescript": "6.0.2",
+  "typescript-eslint": "8.58.2",
+  "vite": "8.0.9"
+}
 ```
+
+### Development Tooling Usage
+
+`typescript` - Adds static typing support
+`@types/react` - React type definitions
+`@types/react-dom` - React DOM type definitions
+`@types/node` - Node.js type definitions
+`eslint` - Linting and code quality checks
+`@typescript-eslint/parser` - Parses TypeScript for ESLint
+`@typescript-eslint/eslint-plugin` - TypeScript-specific linting rules
+`eslint-plugin-react-hooks` - Validates React Hooks usage
+`eslint-plugin-react-refresh` - Supports React Fast Refresh
+`@vitejs/plugin-react` - React integration for Vite
+`vite` - Development server and production bundler
+`globals` - Provides global variable definitions
+`typescript-eslint` - TypeScript ESLint utilities
+
+---
+
+# Getting Started
+
+## 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd <project-folder>
+```
+
+---
+
+## 2. Install Dependencies
+
+```bash
+npm install
+```
+
+This command installs all required packages listed in `package.json`.
+
+---
+
+## 3. Start Development Server
+
+```bash
+npm run dev
+```
+
+Runs the application in development mode using Vite.
+
+# Available Scripts
+
+`npm run dev` - Starts the development server
+`npm run build` - Builds the application for production
+`npm run preview` - Previews the production build locally
+`npm run lint` - Runs ESLint checks
+
+---
