@@ -1,8 +1,15 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
+import Sidebar from "./components/navbar";
+
 const App = () => {
   return (
-    <div>
-      <h1>App Is Running</h1>
-    </div>
+    <BrowserRouter>
+      <Sidebar onToggle={() => {}} />
+      <Routes>
+        <Route path="/" />
+      </Routes>
+    </BrowserRouter>
   );
 };
 

@@ -1,0 +1,239 @@
+/* Sidebar.module.css */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 40;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 260px;
+  height: 100vh;
+
+  background: linear-gradient(
+    to bottom,
+    oklch(0.45 0.25 280),
+    oklch(0.55 0.22 250)
+  );
+
+  transition: all 0.3s ease;
+}
+
+.collapsed {
+  width: 80px;
+}
+
+.logoSection {
+  height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 16px;
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  text-decoration: none;
+}
+
+.logoIcon {
+  width: 40px;
+  height: 40px;
+
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoText {
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+}
+
+.toggleButton {
+  position: absolute;
+  top: 20px;
+  right: -16px;
+
+  width: 32px;
+  height: 32px;
+
+  border-radius: 50%;
+  border: 2px solid #ddd;
+
+  background: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toggleButton:hover {
+  background: #f3f4f6;
+}
+
+.rotated {
+  transform: rotate(180deg);
+}
+
+.navigation {
+  flex: 1;
+
+  padding: 16px 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px 14px;
+
+  border-radius: 14px;
+
+  text-decoration: none;
+
+  color: rgba(255, 255, 255, 0.8);
+
+  transition: all 0.2s ease;
+}
+
+.navItem:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.active {
+  background: white;
+  color: oklch(0.45 0.25 280);
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.navCollapsed {
+  justify-content: center;
+}
+
+.navIcon {
+  flex-shrink: 0;
+}
+
+.navLabel {
+  font-weight: 500;
+}
+
+.bottomSection {
+  padding: 16px;
+}
+
+.proCard {
+  border-radius: 20px;
+
+  padding: 16px;
+
+  background: rgba(255, 255, 255, 0.1);
+
+  backdrop-filter: blur(10px);
+}
+
+.proCollapsed {
+  padding: 10px;
+}
+
+.proTop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-bottom: 14px;
+}
+
+.proIcon {
+  width: 36px;
+  height: 36px;
+
+  border-radius: 50%;
+
+  background: oklch(0.65 0.2 155);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.proTitle {
+  margin: 0;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  color: white;
+}
+
+.badge {
+  display: inline-flex;
+
+  padding: 2px 8px;
+
+  border-radius: 999px;
+
+  background: oklch(0.65 0.2 155);
+
+  color: white;
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.upgradeButton {
+  width: 100%;
+
+  border: none;
+  border-radius: 14px;
+
+  padding: 12px;
+
+  background: oklch(0.65 0.2 155);
+
+  color: white;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.upgradeButton:hover {
+  background: oklch(0.6 0.22 155);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.collapsedPro {
+  display: flex;
+  justify-content: center;
+}
