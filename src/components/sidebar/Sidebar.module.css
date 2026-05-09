@@ -1,0 +1,357 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  width: 220px;
+  height: 100vh;
+  background: linear-gradient(
+    to bottom,
+    oklch(0.45 0.25 280),
+    oklch(0.55 0.22 250)
+  );
+  transition:
+    width 0.3s ease,
+    transform 0.3s ease;
+}
+
+.collapsed {
+  width: 60px;
+}
+
+.collapsed .navMain {
+  flex: unset;
+  width: 100%;
+  justify-content: center;
+  padding: 8px 10px;
+}
+
+/* =========================
+   Logo
+========================= */
+
+.logoSection {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ffffff2e;
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.logoIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logoText {
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  white-space: nowrap;
+}
+
+/* =========================
+   Toggle
+========================= */
+
+.toggleButton {
+  position: absolute;
+  top: 20px;
+  right: -14px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toggleButton:hover {
+  background: #f3f4f6;
+}
+
+.rotated {
+  transform: rotate(180deg);
+}
+
+/* =========================
+   Navigation
+========================= */
+
+.navigation {
+  flex: 1;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+}
+
+/* =========================
+   Normal Nav Item
+========================= */
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.2s ease;
+}
+
+.navItem:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white !important;
+}
+
+.navCollapsed {
+  justify-content: center;
+}
+
+/* =========================
+   Active
+========================= */
+
+.active {
+  background: white;
+  color: oklch(0.45 0.25 280) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* =========================
+   Icon + Label
+========================= */
+
+.navIcon {
+  flex-shrink: 0;
+}
+
+.navLabel {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.navContent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* =========================
+   Split Nav
+========================= */
+
+.navSplit {
+  display: flex;
+  align-items: stretch;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+/* =========================
+   Main Click Area
+========================= */
+
+.navMain {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.2s ease;
+}
+
+.navMain:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white !important;
+}
+
+/* =========================
+   Expand Button
+========================= */
+
+.expandButton {
+  width: 52px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-left: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(4px);
+}
+
+.expandButton:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease;
+}
+
+/* =========================
+   Sub Menu
+========================= */
+
+.subMenu {
+  margin-top: 6px;
+  margin-left: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+}
+
+/* vertical connector line */
+
+.subMenu::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  bottom: 20px;
+  left: 10px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.subNavItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px 8px 24px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.75);
+  transition: all 0.2s ease;
+}
+
+.subNavItem:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white !important;
+}
+
+/* small horizontal connector */
+
+.subNavItem::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  width: 10px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* =========================
+   Bottom Section
+========================= */
+
+.bottomSection {
+  padding: 16px;
+}
+
+/* =========================
+   Pro Card
+========================= */
+
+.proCard {
+  border-radius: 20px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.proCollapsed {
+  padding: 6px 18px;
+}
+
+.proTop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.proIcon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: oklch(0.65 0.2 155);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.proTitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+}
+
+.badge {
+  display: inline-flex;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: oklch(0.65 0.2 155);
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.upgradeButton {
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  padding: 12px;
+  background: oklch(0.65 0.2 155);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.upgradeButton:hover {
+  background: oklch(0.6 0.22 155);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.collapsedPro {
+  display: flex;
+  justify-content: center;
+}
