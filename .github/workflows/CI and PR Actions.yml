@@ -162,9 +162,12 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const issue_number = pr.number;
-
-            const reviewer = ["ManagerVishwaLabs", "SanjaikumaranVishwaLabs"];
-
+            
+            const reviewers = [
+              "ManagerVishwaLabs",
+              "SanjaikumaranVishwaLabs"
+            ];
+            
             await github.rest.issues.addAssignees({
               owner,
               repo,
@@ -172,12 +175,16 @@ jobs:
               assignees: [pr.user.login]
             });
 
-            if (pr.user.login.toLowerCase() !== reviewer.toLowerCase()) {
+            const filteredReviewers = reviewers.filter(
+              reviewer => reviewer.toLowerCase() !== pr.user.login.toLowerCase()
+            );
+            
+            if (filteredReviewers.length > 0) {
               await github.rest.pulls.requestReviewers({
                 owner,
                 repo,
                 pull_number: issue_number,
-                reviewers: reviewers
+                reviewers: filteredReviewers
               });
             } else {
               console.log("Skipping review request: PR author is reviewer");
