@@ -163,7 +163,7 @@ jobs:
             const repo = context.repo.repo;
             const issue_number = pr.number;
 
-            const reviewer = "Sraju03";
+            const reviewer = ["ManagerVishwaLabs", "SanjaikumaranVishwaLabs"];
 
             await github.rest.issues.addAssignees({
               owner,
@@ -177,7 +177,7 @@ jobs:
                 owner,
                 repo,
                 pull_number: issue_number,
-                reviewers: [reviewer]
+                reviewers: reviewers
               });
             } else {
               console.log("Skipping review request: PR author is reviewer");
