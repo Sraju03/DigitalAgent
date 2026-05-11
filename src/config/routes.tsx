@@ -6,7 +6,7 @@ import {
   Users,
   User,
   Shield,
-} from "../assets/icons";
+} from "../components/icons";
 
 import Page from "../pages/TestPage/TestPage";
 

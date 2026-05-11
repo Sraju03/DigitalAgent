@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 
 import { NAV_ITEMS } from "../../config/routes";
 
-import { ChevronLeft, ChevronDown, Zap } from "../../assets/icons";
+import { ChevronLeft, ChevronDown, Zap } from "../../components/icons";
 import styles from "./Sidebar.module.css";
 
 const APP_CONFIG = {
